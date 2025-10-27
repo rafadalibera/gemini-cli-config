@@ -14,6 +14,13 @@
         "https://mcp.atlassian.com/v1/sse"
       ]
     },
+    "bigquery": {
+        "command": "./PATH/TO/toolbox",
+        "args": ["--prebuilt","bigquery","--stdio"],
+        "env": {
+          "BIGQUERY_PROJECT": "PROJECT_ID"
+        }
+      }, 
     "github": {
       "command": "npx",
       "args": [
