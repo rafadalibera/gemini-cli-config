@@ -1,0 +1,7 @@
+{
+  "telemetry": {
+    "enabled": true,
+    "target": "gcp",
+    "useCliAuth": true
+  }
+}

@@ -1,119 +1,60 @@
-# gemini-cli-config
+# Gemini CLI Setup Environment
 
-Este repositório armazena as configurações do Gemini CLI.
+## Overview
 
-## Estrutura do Diretório
+This repository provides a set of scripts to quickly and automatically set up the necessary environment for using the Google Gemini CLI (`@google/gemini-cli`). It handles the installation of dependencies like NPM and configures the user's shell to streamline authentication.
 
-- **.gemini/**: Contém os arquivos de configuração e contexto do Gemini CLI.
-  - **.env**: Arquivo para definir variáveis de ambiente.
-  - **GEMINI.md**: Arquivo de contexto principal que pode ser usado para fornecer informações ao modelo.
-  - **settings.json**: Arquivo de configuração principal do Gemini CLI.
-  - **commands/**: Diretório para definir comandos personalizados.
+## Prerequisites
 
-## O arquivo `settings.json`
+Before running the setup scripts, you must have the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) (`gcloud`) installed and authenticated on your system. The scripts rely on `gcloud` for Application Default Credentials (ADC) to authenticate with Google services.
 
-O arquivo `settings.json` é usado para configurar o comportamento do Gemini CLI.
+## Setup
 
-### `context`
+Follow the instructions for your operating system.
 
-Define o arquivo de contexto a ser usado. Por padrão, é `GEMINI.md`.
+### For Linux (Debian/Ubuntu-based)
 
-```json
-"context": {
-  "fileName": "GEMINI.md"
-}
-```
+The script will:
+- Check for and install `npm` (via `nodejs`) if it's not present.
+- Install the Gemini CLI (`@google/gemini-cli`) globally.
+- Copy configuration files to `~/.gemini`.
+- Append a helper function to your `~/.bashrc` to manage `gcloud` authentication automatically.
 
-### `mcpServers`
+**Instructions:**
+1.  Open a terminal and navigate to the root of this repository.
+2.  Make the script executable:
+    ```bash
+    chmod +x ./linux/setup_gemini.sh
+    ```
+3.  Run the script:
+    ```bash
+    ./linux/setup_gemini.sh
+    ```
+4.  The script will prompt for your `sudo` password to install packages.
+5.  After the script completes, **restart your terminal** for the changes to take effect.
 
-Esta seção configura os servidores do Model Context Protocol (MCP). O MCP permite que o Gemini CLI interaja com várias ferramentas e serviços.
+### For Windows
 
-- **context7**: Fornece documentação de código atualizada e específica da versão para evitar que o modelo gere código desatualizado. Mais informações em [upstash/context7](https://github.com/upstash/context7).
-- **atlassian**: Permite a interação com as ferramentas da Atlassian, como Jira e Confluence. Mais informações em [sooperset/mcp-atlassian](https://github.com/sooperset/mcp-atlassian).
-- **github**: Integra o Gemini CLI com a plataforma GitHub, permitindo ações como navegar em repositórios, gerenciar issues e pull requests. Mais informações em [github/github-mcp-server](https://github.com/github/github-mcp-server).
+The script will:
+- Check for and install `npm` (by downloading and running the Node.js LTS installer) if it's not present.
+- Install the Gemini CLI (`@google/gemini-cli`) globally.
+- Copy configuration files to `%USERPROFILE%/.gemini`.
+- Append a helper function to your PowerShell profile to manage `gcloud` authentication automatically.
 
-```json
-"mcpServers": {
-  "context7": {
-    "httpUrl": "https://mcp.context7.com/mcp"
-  },
-  "atlassian": {
-    "command": "npx",
-    "args": [
-      "-y",
-      "mcp-remote",
-      "https://mcp.atlassian.com/v1/sse"
-    ]
-  },
-  "github": {
-    "command": "npx",
-    "args": [
-      "-y",
-      "@modelcontextprotocol/server-github"
-    ],
-    "env": {
-      "GITHUB_PERSONAL_ACCESS_TOKEN": "seu_token_aqui"
-    }
-  }
-}
-```
+**Instructions:**
+1.  Open a PowerShell terminal and navigate to the root of this repository.
+2.  Run the script:
+    ```powershell
+    .\windows\setup_gemini.ps1
+    ```
+3.  The script will check for Administrator privileges. If it doesn't have them, it will attempt to re-launch itself in a new, elevated PowerShell window. You must approve the User Account Control (UAC) prompt.
+4.  After the script completes, **restart your PowerShell terminal** for all changes (PATH and profile) to take effect.
 
-### `ui`
+---
 
-Configura a aparência da interface do usuário.
+## Configuration Files (`./settings` directory)
 
-```json
-"ui": {
-  "theme": "ANSI"
-}
-```
+This directory contains the configuration files that are automatically copied to your Gemini CLI home directory (`~/.gemini` on Linux or `%USERPROFILE%/.gemini` on Windows) during the setup process.
 
-### `preferedEditor`
-
-Define o editor de código preferido.
-
-```json
-"preferedEditor": "vscode"
-```
-
-## O arquivo `GEMINI.md`
-
-O arquivo `GEMINI.md` serve como um prompt de sistema persistente para o Gemini. O conteúdo deste arquivo é pré-anexado a cada prompt enviado ao modelo. Isso é útil para fornecer contexto, diretrizes e instruções consistentes para o modelo em todas as interações.
-
-Neste repositório, o `GEMINI.md` contém o Guia de Estilo Python do Google, garantindo que o modelo siga as convenções de codificação do Google ao gerar ou analisar código Python.
-
-## Comandos Personalizados
-
-O diretório `commands` permite a criação de comandos personalizados que podem ser executados no Gemini CLI. Cada comando é definido por um arquivo `.toml` que contém uma descrição e um prompt.
-
-### `/explain`
-
-O comando `explain` é definido em `explain.toml`. Ele instrui o modelo a analisar o código e responder a perguntas sobre ele em um modo somente leitura.
-
-- **Descrição**: "Explain mode. Analyzes the codebase to answer questions and provide insights."
-- **Uso**: `/explain <sua_pergunta>`
-
-### `/plan`
-
-O comando `plan` é um comando aninhado com subcomandos definidos no diretório `plan/`.
-
-#### `/plan new`
-
-Definido em `plan/new.toml`, este comando gera um plano de implementação detalhado para uma nova funcionalidade.
-
-- **Descrição**: "Plan mode. Generates a plan for a feature based on a description"
-- **Uso**: `/plan new <descrição_da_feature>`
-
-#### `/plan impl`
-
-Definido em `plan/impl.toml`, este comando executa um plano de implementação existente.
-
-- **Descrição**: "Implementation mode. Implements a plan for a feature based on a description"
-- **Uso**: `/plan impl <caminho_para_o_plano>`
-
-#### `/plan refine`
-
-Definido em `plan/refine.toml`, este comando refina um plano de implementação existente com base no feedback do usuário.
-
-- **Descrição**: "Refinement mode. Refines an existing plan based on user feedback."
-- **Uso**: `/plan refine <caminho_para_o_plano>`
+-   `settings.json`: This is the primary configuration file for the Gemini CLI. You can modify it to change the default behavior, logging, output formats, and other tool settings.
+-   `.env`: This file is used to store environment variables. While the current setup uses `gcloud` ADC for authentication, you could use this file to set an `API_KEY` or other sensitive information if you were using a different authentication method.
