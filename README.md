@@ -15,7 +15,8 @@ Follow the instructions for your operating system.
 ### For Linux (Debian/Ubuntu-based)
 
 The script will:
-- Check for and install `npm` (via `nodejs`) if it's not present.
+- Install `nvm` (Node Version Manager) if it's not already installed.
+- Install the latest LTS version of `node` and `npm` using `nvm`.
 - Install the Gemini CLI (`@google/gemini-cli`) globally.
 - Copy configuration files to `~/.gemini`.
 - Append a helper function to your `~/.bashrc` to manage `gcloud` authentication automatically.
@@ -30,13 +31,15 @@ The script will:
     ```bash
     ./linux/setup_gemini.sh
     ```
-4.  The script will prompt for your `sudo` password to install packages.
-5.  After the script completes, **restart your terminal** for the changes to take effect.
+4.  After the script completes, **restart your terminal** for the changes to take effect.
 
 ### For Windows
 
+Before running the script, you must install **NVM for Windows**. You can find the installer and instructions on the [nvm-windows repository](https://github.com/coreybutler/nvm-windows).
+
 The script will:
-- Check for and install `npm` (by downloading and running the Node.js LTS installer) if it's not present.
+- Check if `nvm` is installed.
+- Check for and install `npm` and `node` using `nvm` if they are not present.
 - Install the Gemini CLI (`@google/gemini-cli`) globally.
 - Copy configuration files to `%USERPROFILE%/.gemini`.
 - Append a helper function to your PowerShell profile to manage `gcloud` authentication automatically.

@@ -43,35 +43,31 @@ Write-Success "Running as Administrator."
 # Set TLS 1.2 for web requests
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-# --- 2. CHECK AND INSTALL NPM (via Node.js) ---
+# --- 2. CHECK AND INSTALL NPM (via NVM) ---
 Write-Log "Checking for NPM..."
 $npmExists = Get-Command npm -ErrorAction SilentlyContinue
 if ($npmExists) {
     Write-Success "NPM is already installed."
 } else {
-    Write-Log "NPM not found. Attempting to install Node.js..."
-    $nodeUrl = "https://nodejs.org/dist/v20.12.2/node-v20.12.2-x64.msi" # LTS version, check for updates
-    $msiPath = Join-Path $env:TEMP "node-installer.msi"
-
-    try {
-        Write-Log "Downloading Node.js installer from $nodeUrl..."
-        Invoke-WebRequest -Uri $nodeUrl -OutFile $msiPath
-    } catch {
-        Write-Error "Failed to download Node.js installer. Please install it manually from nodejs.org."
+    Write-Log "NPM not found. Checking for NVM for Windows..."
+    $nvmExists = Get-Command nvm -ErrorAction SilentlyContinue
+    if (-NOT $nvmExists) {
+        Write-Error "NVM for Windows is not installed. Please install it from https://github.com/coreybutler/nvm-windows/releases and re-run this script."
     }
-
-    Write-Log "Running Node.js installer... This may take a moment."
-    Start-Process msiexec.exe -ArgumentList "/i `"$msiPath`" /quiet" -Wait
-
-    # Add Node.js to the path for the CURRENT session
-    $env:Path += ";C:\Program Files\nodejs"
-    Write-Log "Temporarily added Node.js to PATH. Please restart your terminal after the script finishes."
+    
+    Write-Log "NVM found. Installing the latest LTS version of Node.js. This may take a moment..."
+    try {
+        nvm install lts
+        nvm use lts
+    } catch {
+        Write-Error "Failed to install Node.js using NVM. Please check your NVM installation and try again."
+    }
 
     # Verify installation
     if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
-        Write-Error "Node.js installation failed. Please try installing it manually."
+        Write-Error "Node.js installation via NVM failed. Please try installing it manually."
     }
-    Write-Success "Node.js and NPM installed successfully."
+    Write-Success "Node.js and NPM installed successfully via NVM."
 }
 Write-Log "NPM Version: $(npm --version)"
 
