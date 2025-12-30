@@ -60,4 +60,4 @@ The script will:
 This directory contains the configuration files that are automatically copied to your Gemini CLI home directory (`~/.gemini` on Linux or `%USERPROFILE%/.gemini` on Windows) during the setup process.
 
 -   `settings.json`: This is the primary configuration file for the Gemini CLI. You can modify it to change the default behavior, logging, output formats, and other tool settings.
--   `.env`: This file is used to store environment variables. While the current setup uses `gcloud` ADC for authentication, you could use this file to set an `API_KEY` or other sensitive information if you were using a different authentication method.
+-   `.env`: This file is used to store environment variables. While the current setup uses `gcloud` ADC for authentication, you could use this file to set an `GOOGLE_CLOUD_PROJECT` or other sensitive information if you were using a different authentication method.
