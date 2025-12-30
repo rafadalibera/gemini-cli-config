@@ -12,7 +12,7 @@ function gemini {
 
     # Execute the real Gemini CLI, passing all arguments
     # Find the actual gemini executable, excluding the function itself.
-    $geminiExecutable = (Get-Command gemini -ErrorAction SilentlyContinue | Where-Object { $_.CommandType -ne 'Function' } | Select-Object -First 1).Source
+    $geminiExecutable = (Get-Command gemini.ps1 -ErrorAction SilentlyContinue | Where-Object { $_.CommandType -ne 'Function' } | Select-Object -First 1).Source
 
     if ($geminiExecutable) {
          # Execute the real Gemini CLI, passing all arguments
