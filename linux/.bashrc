@@ -6,7 +6,6 @@ gemini() {
         echo "Starting Google Cloud authentication..."
         gcloud auth application-default login
     else
-        # Optional: remove this echo if you prefer a completely clean terminal
         echo "✅ ADC authentication active."
     fi
 
